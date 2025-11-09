@@ -35,30 +35,30 @@ jobs:
         docker stop tasktracker-test
         docker rm tasktracker-test
 
-  deploy:
-  runs-on: ubuntu-latest
-  needs: build-and-test
-  if: github.ref == 'refs/heads/main'
-  
-  steps:
-  - name: Checkout code
-    uses: actions/checkout@v3
+  deploy:  # ← This line is correct
+    runs-on: ubuntu-latest  # ← Add 2 spaces indentation here
+    needs: build-and-test   # ← Add 2 spaces indentation here
+    if: github.ref == 'refs/heads/main'  # ← Add 2 spaces indentation here
     
-  - name: Build production image
-    run: docker build -t tasktracker:latest .
-    
-  - name: Debug - Check secrets
-    run: |
-      echo "Username: $DOCKER_USERNAME"
-      echo "Password length: ${#DOCKER_PASSWORD}"
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    
-  - name: Login to Docker Hub
-    run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-    
-  - name: Push to Docker Hub
-    run: |
-      docker tag tasktracker:latest ${{ secrets.DOCKER_USERNAME }}/tasktracker:latest
-      docker push ${{ secrets.DOCKER_USERNAME }}/tasktracker:latest
+    steps:  # ← Add 2 spaces indentation here
+    - name: Checkout code  # ← This should have 4 spaces indentation
+      uses: actions/checkout@v3
+      
+    - name: Build production image
+      run: docker build -t tasktracker:latest .
+      
+    - name: Debug - Check secrets
+      run: |
+        echo "Username: $DOCKER_USERNAME"
+        echo "Password length: ${#DOCKER_PASSWORD}"
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+    - name: Login to Docker Hub
+      run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+      
+    - name: Push to Docker Hub
+      run: |
+        docker tag tasktracker:latest ${{ secrets.DOCKER_USERNAME }}/tasktracker:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/tasktracker:latest
