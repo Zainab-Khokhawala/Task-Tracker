@@ -1,4 +1,4 @@
-name: HomeBites Docker CI/CD
+name: TaskTracker Docker CI/CD
 
 on:
   push:
